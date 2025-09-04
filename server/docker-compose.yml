@@ -1,0 +1,126 @@
+# version: '3.8'
+
+# services:
+#   fastapi-backend:
+#     build: .
+#     ports:
+#       - "8000:8000"
+#     environment:
+#       # MongoDB connection string pointing to host machine
+#       - MONGODB_URL=mongodb://host.docker.internal:27017/fastapi_cookie_auth
+#       # CORS settings for React frontend
+#       - FRONTEND_URL=http://localhost:8080
+#       - ENVIRONMENT=development
+#     volumes:
+#       # Mount source code for development (hot reload)
+#       - .:/app
+#       - /app/__pycache__
+#     networks:
+#       - app-network
+#     # Use host.docker.internal to access services on host machine
+#     extra_hosts:
+#       - "host.docker.internal:host-gateway"
+
+# networks:
+#   app-network:
+#     driver: bridge
+
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: scrapper-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # MongoDB connection string pointing to host machine
+      - MONGODB_URL=mongodb://host.docker.internal:27017/fastapi_cookie_auth
+      # CORS settings for React frontend
+      - FRONTEND_URL=http://localhost:8080
+      - ENVIRONMENT=development
+      # Redis connection for the backend
+      - REDIS_URL=redis://redis:6379/0
+      # RabbitMQ connection for the backend
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672/
+    env_file:
+      - .env
+    volumes:
+      # Mount source code for development (hot reload)
+      - .:/app
+      - /app/_pycache_
+    networks:
+      - app-network
+    # Use host.docker.internal to access services on host machine
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build: .
+    container_name: scrapper-worker
+    environment:
+      # MongoDB connection string pointing to host machine
+      - MONGODB_URL=mongodb://host.docker.internal:27017/fastapi_cookie_auth
+      # Redis connection for the worker
+      - REDIS_URL=redis://redis:6379/0
+      # RabbitMQ connection for the worker
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672/
+      - ENVIRONMENT=development
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/_pycache_
+    networks:
+      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: celery -A celery_app.celery worker --loglevel=info --concurrency=2
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: scrapper-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: scrapper-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    command: redis-server --appendonly yes
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  rabbitmq_data:
+  redis_data:

@@ -1,0 +1,16 @@
+fastapi[standard]
+uvicorn
+pymongo
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+motor
+pydantic[email]
+pydantic-settings
+celery
+redis
+kombu
+requests
+langchain
+langchain-groq
+gunicorn

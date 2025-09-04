@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* WebScraper AI Design System - Professional Dark Theme */
+
+@layer base {
+  :root {
+    /* Primary Dark Theme Colors */
+    --scraper-bg-primary: 240 24% 8%;        /* #0f0f23 */
+    --scraper-bg-secondary: 240 24% 12%;     /* #1a1a2e */
+    --scraper-bg-card: 240 35% 15%;          /* #16213e */
+    --scraper-bg-card-hover: 240 35% 18%;    /* #1c2746 */
+    
+    /* Text Colors */
+    --scraper-text-primary: 0 0% 100%;       /* #ffffff */
+    --scraper-text-secondary: 0 0% 63%;      /* #a0a0a0 */
+    --scraper-text-muted: 0 0% 45%;          /* #737373 */
+    
+    /* Accent Colors */
+    --scraper-accent-primary: 343 81% 62%;   /* #e94560 */
+    --scraper-accent-secondary: 38 88% 52%;  /* #f39c12 */
+    --scraper-accent-success: 142 76% 36%;   /* #27ae60 */
+    --scraper-accent-warning: 45 100% 51%;   /* #f1c40f */
+    
+    /* Interactive States */
+    --scraper-border: 240 20% 25%;           /* #353959 */
+    --scraper-border-hover: 240 20% 35%;     /* #4a4f73 */
+    --scraper-input-bg: 240 20% 18%;         /* #262950 */
+    --scraper-button-hover: 343 81% 55%;     /* #dc3d56 */
+    
+    /* Gradients */
+    --scraper-gradient-primary: linear-gradient(135deg, hsl(343 81% 62%), hsl(38 88% 52%));
+    --scraper-gradient-card: linear-gradient(180deg, hsl(240 35% 15%), hsl(240 35% 12%));
+    --scraper-gradient-glow: radial-gradient(circle at center, hsl(343 81% 62% / 0.1), transparent 70%);
+    
+    /* Shadows */
+    --scraper-shadow-sm: 0 2px 8px hsl(240 24% 8% / 0.3);
+    --scraper-shadow-md: 0 4px 16px hsl(240 24% 8% / 0.4);
+    --scraper-shadow-lg: 0 8px 32px hsl(240 24% 8% / 0.5);
+    --scraper-shadow-glow: 0 0 40px hsl(343 81% 62% / 0.2);
+    
+    /* Animations */
+    --scraper-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --scraper-transition-fast: all 0.15s ease-out;
+    
+    /* Enhanced animations */
+    --scraper-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --scraper-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    /* Standard shadcn variables mapped to our theme */
+    --background: var(--scraper-bg-primary);
+    --foreground: var(--scraper-text-primary);
+    --card: var(--scraper-bg-card);
+    --card-foreground: var(--scraper-text-primary);
+    --popover: var(--scraper-bg-card);
+    --popover-foreground: var(--scraper-text-primary);
+    --primary: var(--scraper-accent-primary);
+    --primary-foreground: var(--scraper-text-primary);
+    --secondary: var(--scraper-bg-secondary);
+    --secondary-foreground: var(--scraper-text-primary);
+    --muted: var(--scraper-bg-secondary);
+    --muted-foreground: var(--scraper-text-secondary);
+    --accent: var(--scraper-accent-secondary);
+    --accent-foreground: var(--scraper-text-primary);
+    --destructive: 0 84% 60%;
+    --destructive-foreground: var(--scraper-text-primary);
+    --border: var(--scraper-border);
+    --input: var(--scraper-input-bg);
+    --ring: var(--scraper-accent-primary);
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Enhanced animations */
+  .animate-bounce-in {
+    animation: bounce-in 0.6s var(--scraper-bounce);
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.4s var(--scraper-smooth);
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  /* Hover effects */
+  .hover-lift {
+    transition: transform 0.2s var(--scraper-smooth);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+  
+  .hover-glow:hover {
+    box-shadow: 0 0 20px hsl(var(--scraper-accent-primary) / 0.3);
+  }
+  
+  /* Group hover effects */
+  .group:hover .group-hover-visible {
+    opacity: 1;
+  }
+  
+  .group-hover-visible {
+    opacity: 0;
+    transition: opacity 0.2s var(--scraper-smooth);
+  }
+}
+
+/* Keyframe animations */
+@keyframes bounce-in {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.3) translateY(50px); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.05) translateY(-10px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+}
+
+@keyframes slide-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px hsl(var(--scraper-accent-primary) / 0.2);
+  }
+  to {
+    box-shadow: 0 0 40px hsl(var(--scraper-accent-primary) / 0.4);
+  }
+}
